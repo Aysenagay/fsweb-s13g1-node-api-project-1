@@ -3,6 +3,7 @@ const express = require("express");
 const Users = require("./users/model");
 const server = express();
 server.use(express.json());
+
 server.get("/", (req, res) => {
   res.send("Server is up and running!...");
 });
@@ -54,5 +55,47 @@ server.get("/api/users/:id", (req, res) => {
 });
 
 //DELETE
+server.delete("/api/users/:id", (req, res) => {
+  const id = req.params.id;
+  Users.remove(id)
+    .then((deletedUser) => {
+      if (!deletedUser) {
+        return res
+          .status(404)
+          .json({ message: "Belirtilen ID'li kullanıcı bulunamadı" });
+      }
+      res.json(deletedUser);
+    })
+    .catch(() => {
+      res.status(500).json({ message: "Kullanıcı silinemedi" });
+    });
+});
+
+//PUT
+
+server.put("/api/users/:id", (req, res) => {
+  const id = req.params.id;
+  const user = req.body;
+
+  if (!user.name || !user.bio) {
+    return res
+      .status(400)
+      .json({ message: "Lütfen kullanıcı için name ve bio sağlayın" });
+  }
+
+  Users.update(id, user)
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        return res
+          .status(404)
+          .json({ message: "Belirtilen ID'li kullanıcı bulunamadı" });
+      }
+      res.json(updatedUser);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ message: "Kullanıcı bilgisi alınamadı" });
+    });
+});
 
 module.exports = server; // SERVERINIZI EXPORT EDİN {}
