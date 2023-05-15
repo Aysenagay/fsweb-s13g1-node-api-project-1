@@ -1,3 +1,9 @@
 // SUNUCUYU BU DOSYAYA KURUN
+const express = require("express");
+const server = express();
 
-module.exports = {}; // SERVERINIZI EXPORT EDİN {}
+server.get("/", (req, res) => {
+  res.send("Server is up and running!...");
+});
+
+module.exports = server; // SERVERINIZI EXPORT EDİN {}
