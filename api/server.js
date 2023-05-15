@@ -89,8 +89,9 @@ server.put("/api/users/:id", (req, res) => {
         return res
           .status(404)
           .json({ message: "Belirtilen ID'li kullanıcı bulunamadı" });
+      } else {
+        res.json(updatedUser);
       }
-      res.json(updatedUser);
     })
     .catch((error) => {
       console.error(error);
